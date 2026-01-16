@@ -14,7 +14,7 @@ export const mockCards: Card[] = [
         {
           condition: 'default',
           storyText: 'Vítima encontrada às 07:00 da manhã pelo zelador do cemitério.\nCausa da morte: Choque hipovolêmico causado por laceração profunda.\nEla lutou, mas não muito. Havia resquícios de terra debaixo das unhas.',
-          gameInstruction: 'MANTENHA ESTA CARTA COMO REFERÊNCIA'
+          gameInstruction: ''
         }
       ]
     }
@@ -28,16 +28,34 @@ export const mockCards: Card[] = [
       type: 'suspect',
       imageUrl: images.amigoSuspeito,
       interactions: [
+        // Interrogação no Cemitério (L1) - sem flag
         {
-          condition: 'default',
-          storyText: 'Ricardo está na sala de interrogatório 1. Ele chora e treme.\n"Ana era minha irmã de alma! Nós íamos abrir a galeria no mês que vem... O sonho dela era o meu sonho. Quem faria isso?"',
-          gameInstruction: 'O DEPOIMENTO PARECE EMOCIONAL, MAS VAGO. ANALISE OS LOCAIS PARA CHECAR O ÁLIBI.'
+          condition: 'requires_location_and_suspect',
+          requiredLocation: 'L1',
+          storyText: 'Você interroga Ricardo sobre o Cemitério Antigo. Ele nega veementemente:\n"Não estava aqui naquela noite! Estava na galeria preparando a exposição. Não tenho motivo para vir a um cemitério."',
+          gameInstruction: ''
         },
+        // Interrogação no Cemitério (L1) - com flag (após descobrir áudio)
         {
-          condition: 'requires_flag',
+          condition: 'requires_location_and_suspect',
+          requiredLocation: 'L1',
           requiredFlag: 'pista_l1_desbloqueada',
           storyText: 'Você toca o áudio recuperado no cemitério. A postura de Ricardo muda. O choro para. Ele te encara com frieza.\n"Assistente... Ela me chamou de assistente na frente dos investidores. A arte era minha. A visão era minha! Ela só tinha o cheque. Eu não ia deixar ela me apagar."',
-          gameInstruction: 'CONFISSÃO OBTIDA. MOTIVO: INVEJA E VINGANÇA. ESTE É O ASSASSINO.'
+          gameInstruction: ''
+        },
+        // Interrogação na Mansão (L2)
+        {
+          condition: 'requires_location_and_suspect',
+          requiredLocation: 'L2',
+          storyText: 'Você interroga Ricardo sobre a Mansão da Vítima. Ele nega:\n"Não estive na mansão dela naquela noite. Não tenho acesso. Não sei o que aconteceu lá."',
+          gameInstruction: ''
+        },
+        // Interrogação no Parque (L3)
+        {
+          condition: 'requires_location_and_suspect',
+          requiredLocation: 'L3',
+          storyText: 'Você interroga Ricardo sobre o Parque da Cidade. Ele nega:\n"Não estava no parque. Não tenho motivo para estar lá. Não conheço esse lugar."',
+          gameInstruction: ''
         }
       ]
     }
@@ -51,10 +69,26 @@ export const mockCards: Card[] = [
       type: 'suspect',
       imageUrl: images.mordomoSuspeito,
       interactions: [
+        // Interrogação no Cemitério (L1)
         {
-          condition: 'default',
-          storyText: 'O Sr. Alfred é um homem de poucas palavras.\n"Servi o chá da tarde às 16:30. Às 17:00 ela atendeu um telefonema, gritou com alguém e saiu furiosa.\nTenho artrite severa, Detetive. Não saio da mansão há semanas. O sistema de alarme confirma: só ela saiu."',
-          gameInstruction: 'ÁLIBI CONFIRMADO PELO ALARME. ELIMINE P3 (MORDOMO) E L2 (CASA).'
+          condition: 'requires_location_and_suspect',
+          requiredLocation: 'L1',
+          storyText: 'Você interroga o Sr. Alfred sobre o Cemitério Antigo. Ele nega categoricamente:\n"Não estava no cemitério. Tenho artrite severa, Detetive. Não saio da mansão há semanas. Não tenho como estar lá."',
+          gameInstruction: ''
+        },
+        // Interrogação na Mansão (L2)
+        {
+          condition: 'requires_location_and_suspect',
+          requiredLocation: 'L2',
+          storyText: 'Você interroga o Sr. Alfred sobre a Mansão. Ele confirma:\n"Estava aqui, sim. Servi o chá da tarde às 16:30. Às 17:00 ela atendeu um telefonema, gritou com alguém e saiu furiosa. O sistema de alarme confirma: só ela saiu. Eu não saí."',
+          gameInstruction: ''
+        },
+        // Interrogação no Parque (L3)
+        {
+          condition: 'requires_location_and_suspect',
+          requiredLocation: 'L3',
+          storyText: 'Você interroga o Sr. Alfred sobre o Parque da Cidade. Ele nega:\n"Não estava no parque. Não saio da mansão. Não tenho como estar lá com minha artrite."',
+          gameInstruction: ''
         }
       ]
     }
@@ -68,10 +102,26 @@ export const mockCards: Card[] = [
       type: 'suspect',
       imageUrl: images.mendigoSuspeito,
       interactions: [
+        // Interrogação no Cemitério (L1)
         {
-          condition: 'default',
-          storyText: 'Jonas foi detido com a bolsa da vítima.\n"Eu não matei ninguém! Achei a bolsa no banco do parque hoje cedo! Tava aberta e vazia.\nEu durmo no albergue do centro, as câmeras de trânsito mostram que eu só cheguei no parque quando o sol nasceu."',
-          gameInstruction: 'CÂMERAS CONFIRMAM: JONAS ESTAVA LONGE NA HORA DA MORTE.\nA BOLSA FOI APENAS DESCARTADA LÁ. ELIMINE P4 (JONAS) E L3 (PARQUE).'
+          condition: 'requires_location_and_suspect',
+          requiredLocation: 'L1',
+          storyText: 'Você interroga Jonas sobre o Cemitério Antigo. Ele nega:\n"Não estava no cemitério naquela noite. Eu durmo no albergue do centro. Não tenho motivo para estar lá."',
+          gameInstruction: ''
+        },
+        // Interrogação na Mansão (L2)
+        {
+          condition: 'requires_location_and_suspect',
+          requiredLocation: 'L2',
+          storyText: 'Você interroga Jonas sobre a Mansão da Vítima. Ele nega:\n"Não estava na mansão. Não tenho acesso a lugares assim. Não sei nada sobre isso."',
+          gameInstruction: ''
+        },
+        // Interrogação no Parque (L3)
+        {
+          condition: 'requires_location_and_suspect',
+          requiredLocation: 'L3',
+          storyText: 'Você interroga Jonas sobre o Parque da Cidade. Ele explica:\n"Eu não matei ninguém! Achei a bolsa no banco do parque hoje cedo! Tava aberta e vazia. As câmeras de trânsito mostram que eu só cheguei no parque quando o sol nasceu."',
+          gameInstruction: ''
         }
       ]
     }
@@ -85,10 +135,26 @@ export const mockCards: Card[] = [
       type: 'suspect',
       imageUrl: images.colegaSuspeito,
       interactions: [
+        // Interrogação no Cemitério (L1)
         {
-          condition: 'default',
-          storyText: 'Camila não esconde o desprezo.\n"Eu queria o cargo dela? Óbvio. Ela era incompetente. Mas eu não sou estúpida de sujar minhas mãos.\nEstava logada no servidor da empresa trabalhando até às 18:45. Verifique os logs de TI se duvida."',
-          gameInstruction: 'LOGS VERIFICADOS. ÁLIBI DIGITAL SÓLIDO.\nELA NÃO TERIA TEMPO DE IR AO CEMITÉRIO. ELIMINE P5 (CAMILA).'
+          condition: 'requires_location_and_suspect',
+          requiredLocation: 'L1',
+          storyText: 'Você interroga Camila sobre o Cemitério Antigo. Ela nega:\n"Não estava no cemitério. Não tenho motivo para estar lá. Não conheço esse lugar."',
+          gameInstruction: ''
+        },
+        // Interrogação na Mansão (L2)
+        {
+          condition: 'requires_location_and_suspect',
+          requiredLocation: 'L2',
+          storyText: 'Você interroga Camila sobre a Mansão da Vítima. Ela nega:\n"Não estava na mansão dela. Não tenho acesso. Não sei o que aconteceu lá."',
+          gameInstruction: ''
+        },
+        // Interrogação no Parque (L3)
+        {
+          condition: 'requires_location_and_suspect',
+          requiredLocation: 'L3',
+          storyText: 'Você interroga Camila sobre o Parque da Cidade. Ela nega:\n"Não estava no parque. Estava logada no servidor da empresa trabalhando até às 18:45. Não teria tempo de ir ao parque. Verifique os logs de TI se duvida."',
+          gameInstruction: ''
         }
       ]
     }
@@ -105,7 +171,7 @@ export const mockCards: Card[] = [
         {
           condition: 'default',
           storyText: 'Relatório do Legista: As feridas no corpo são limpas de um lado e irregulares do outro.\nA largura e a profundidade são 100% compatíveis com a lâmina serrilhada desta faca de caça encontrada num bueiro próximo.',
-          gameInstruction: 'ESTA É A ARMA DO CRIME. MANTENHA A1 NA MESA.'
+          gameInstruction: ''
         }
       ]
     }
@@ -122,7 +188,7 @@ export const mockCards: Card[] = [
         {
           condition: 'default',
           storyText: 'Relatório Toxicológico: O sangue da vítima foi testado para arsênico, cianeto, digitálicos e opióides.\nResultados NEGATIVOS. Não há traços de intoxicação.',
-          gameInstruction: 'MORTE NÃO FOI POR ENVENENAMENTO. ELIMINE A2 (VENENO).'
+          gameInstruction: ''
         }
       ]
     }
@@ -139,7 +205,7 @@ export const mockCards: Card[] = [
         {
           condition: 'default',
           storyText: 'Relatório de Balística: O corpo não apresenta orifícios de entrada ou saída de projéteis.\nNão há resíduos de pólvora nas mãos ou roupas da vítima.',
-          gameInstruction: 'NENHUM DISPARO FOI EFETUADO. ELIMINE A3 (REVÓLVER).'
+          gameInstruction: ''
         }
       ]
     }
@@ -156,7 +222,7 @@ export const mockCards: Card[] = [
         {
           condition: 'default',
           storyText: 'A equipe forense varreu a área. O sinal de GPS do celular da vítima termina aqui.\nRecuperamos um áudio da nuvem enviado minutos antes da morte:\n"Ricardo, pare de insistir. A galeria é minha. Me encontre no túmulo da minha mãe se quiser suas coisas de volta, senão vou queimar tudo."',
-          gameInstruction: 'PISTA CRUCIAL! A VÍTIMA ESTAVA AQUI PARA ENCONTRAR RICARDO (P2).\nCONFRONTE P2 NOVAMENTE COM ESSA INFORMAÇÃO.',
+          gameInstruction: '',
           flagToUnlock: 'pista_l1_desbloqueada'
         }
       ]
@@ -174,7 +240,7 @@ export const mockCards: Card[] = [
         {
           condition: 'default',
           storyText: 'A mansão está intacta. Sem sinais de arrombamento ou luta.\nO chá servido às 16:30 ainda está na xícara, frio. A vítima saiu daqui viva.',
-          gameInstruction: 'A CENA DO CRIME NÃO É AQUI. ELIMINE L2 (MANSÃO).'
+          gameInstruction: ''
         }
       ]
     }
@@ -191,7 +257,7 @@ export const mockCards: Card[] = [
         {
           condition: 'default',
           storyText: 'O parque é mal iluminado. Encontramos a bolsa da vítima num banco, mas sem sangue ou sinais de luta ao redor.\nO assassino apenas usou este local para se livrar de pertences pessoais da vítima.',
-          gameInstruction: 'LOCAL DE DESCARTE, NÃO DE MORTE. ELIMINE L3 (PARQUE).'
+          gameInstruction: ''
         }
       ]
     }

@@ -58,34 +58,69 @@ export const useInvestigation = () => {
         return;
       }
 
-      // Processa as interações baseado nas flags atuais
+      // Lógica específica para suspeitos: requer local selecionado
+      if (card.attributes.type === 'suspect' && card.attributes.code !== 'P1') {
+        if (!gameState.currentLocation) {
+          setResponse({ 
+            error: 'Selecione um local primeiro antes de interrogar suspeitos. Use o seletor de local acima.' 
+          });
+          setIsLoading(false);
+          return;
+        }
+      }
+
+      // Processa as interações baseado nas flags atuais e local
       let selectedInteraction: typeof card.attributes.interactions[0] | null = null;
       let defaultInteraction: typeof card.attributes.interactions[0] | null = null;
+      let contextualInteraction: typeof card.attributes.interactions[0] | null = null;
 
       // Primeiro, separa as interações por tipo e encontra a melhor match
       for (const interaction of card.attributes.interactions) {
-        if (interaction.condition === 'requires_flag' && interaction.requiredFlag) {
-          // Se a flag está desbloqueada, esta é a interação que queremos
+        // Prioridade 1: Interação contextual (local + suspeito) - pode ter flag também
+        if (interaction.condition === 'requires_location_and_suspect' && interaction.requiredLocation) {
+          if (gameState.currentLocation === interaction.requiredLocation && card.attributes.type === 'suspect') {
+            // Se tem flag requerida, verifica se está desbloqueada (prioridade máxima)
+            if (interaction.requiredFlag) {
+              if (gameState.unlockedFlags.includes(interaction.requiredFlag)) {
+                contextualInteraction = interaction;
+                break; // Prioridade máxima: interação contextual com flag desbloqueada
+              }
+            } else {
+              // Interação contextual sem flag requerida (guarda como fallback)
+              if (!contextualInteraction) {
+                contextualInteraction = interaction;
+              }
+            }
+          }
+        }
+        // Prioridade 2: Interação com flag desbloqueada (não contextual)
+        else if (interaction.condition === 'requires_flag' && interaction.requiredFlag) {
           if (gameState.unlockedFlags.includes(interaction.requiredFlag)) {
-            selectedInteraction = interaction;
-            break; // Prioridade máxima: para na primeira que encontrar
+            if (!selectedInteraction) {
+              selectedInteraction = interaction;
+            }
           }
-        } else if (interaction.condition === 'requires_location' && interaction.requiredLocation) {
-          // Se o local atual corresponde ao requerido
+        }
+        // Prioridade 3: Interação que requer local específico (para locais)
+        else if (interaction.condition === 'requires_location' && interaction.requiredLocation) {
           if (gameState.currentLocation === interaction.requiredLocation) {
-            selectedInteraction = interaction;
-            break;
+            if (!selectedInteraction) {
+              selectedInteraction = interaction;
+            }
           }
-        } else if (interaction.condition === 'default') {
-          // Guarda a primeira interação default como fallback
+        }
+        // Prioridade 4: Interação default
+        else if (interaction.condition === 'default') {
           if (!defaultInteraction) {
             defaultInteraction = interaction;
           }
         }
       }
 
-      // Se não encontrou uma interação com flag desbloqueada, usa a default
-      if (!selectedInteraction) {
+      // Seleciona a interação: contextual > flag > location > default
+      if (contextualInteraction) {
+        selectedInteraction = contextualInteraction;
+      } else if (!selectedInteraction) {
         selectedInteraction = defaultInteraction || card.attributes.interactions[0];
       }
 

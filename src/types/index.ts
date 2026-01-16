@@ -12,9 +12,9 @@ export type GameState = {
 };
 
 export type Interaction = {
-  condition: 'default' | 'requires_flag' | 'requires_location';
+  condition: 'default' | 'requires_flag' | 'requires_location' | 'requires_location_and_suspect';
   requiredFlag?: string; // Flag necessária para ver este texto
-  requiredLocation?: string; // Local necessário (ex: 'L1')
+  requiredLocation?: string; // Local necessário (ex: 'L1') - usado para interrogações contextuais
   flagToUnlock?: string; // Flag que este texto desbloqueia no GameState
   storyText: string; // O texto narrativo (Markdown/HTML)
   gameInstruction: string; // Ex: "ELIMINE A CARTA A2"

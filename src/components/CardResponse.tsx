@@ -3,9 +3,10 @@ import { InvestigationResponse } from '../types';
 interface CardResponseProps {
   response: InvestigationResponse | null;
   isLoading?: boolean;
+  currentLocation?: string;
 }
 
-export const CardResponse = ({ response, isLoading }: CardResponseProps) => {
+export const CardResponse = ({ response, isLoading, currentLocation }: CardResponseProps) => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-12">
@@ -21,7 +22,8 @@ export const CardResponse = ({ response, isLoading }: CardResponseProps) => {
       <div className="flex items-center justify-center p-12">
         <div className="text-gold/40 text-center">
           <p className="text-lg mb-2">🔍</p>
-          <p>Digite um código para começar a investigação</p>
+          <p className="mb-2">Selecione um local acima e digite o código de uma carta para investigar</p>
+          <p className="text-sm text-gold/30">Ex: L1 para visitar um local, P2 para interrogar um suspeito (após selecionar local)</p>
         </div>
       </div>
     );
@@ -45,9 +47,20 @@ export const CardResponse = ({ response, isLoading }: CardResponseProps) => {
   const instructionColor = isEliminate 
     ? 'text-red-400 border-red-500 bg-red-900/20' 
     : 'text-green-400 border-green-500 bg-green-900/20';
+  
+  const isContextualInterrogation = interaction.condition === 'requires_location_and_suspect' && currentLocation;
 
   return (
     <div className="space-y-6 animate-fadeIn">
+      {/* Indicador de Local Atual (para interrogações contextuais) */}
+      {isContextualInterrogation && currentLocation && (
+        <div className="bg-blue-900/20 border-2 border-blue-500 rounded-lg p-3 text-center">
+          <p className="text-blue-300 text-sm uppercase tracking-wide font-semibold">
+            📍 Interrogação em: {currentLocation}
+          </p>
+        </div>
+      )}
+
       {/* Carta */}
       <div className="flex justify-center">
         <div className="relative border-2 border-gold rounded-lg overflow-hidden shadow-2xl">
@@ -90,26 +103,28 @@ export const CardResponse = ({ response, isLoading }: CardResponseProps) => {
         />
       </div>
 
-      {/* Instrução do Jogo */}
-      <div className={`border-2 rounded-lg p-4 ${instructionColor}`}>
-        <div className="flex items-center justify-center gap-3">
-          {isEliminate ? (
-            <>
-              <span className="text-2xl">🗑️</span>
-              <p className="text-xl font-bold uppercase tracking-wide text-center">
-                {interaction.gameInstruction}
-              </p>
-            </>
-          ) : (
-            <>
-              <span className="text-2xl">✓</span>
-              <p className="text-xl font-bold uppercase tracking-wide text-center">
-                {interaction.gameInstruction}
-              </p>
-            </>
-          )}
+      {/* Instrução do Jogo - Só mostra se houver instrução */}
+      {interaction.gameInstruction && interaction.gameInstruction.trim() && (
+        <div className={`border-2 rounded-lg p-4 ${instructionColor}`}>
+          <div className="flex items-center justify-center gap-3">
+            {isEliminate ? (
+              <>
+                <span className="text-2xl">🗑️</span>
+                <p className="text-xl font-bold uppercase tracking-wide text-center">
+                  {interaction.gameInstruction}
+                </p>
+              </>
+            ) : (
+              <>
+                <span className="text-2xl">✓</span>
+                <p className="text-xl font-bold uppercase tracking-wide text-center">
+                  {interaction.gameInstruction}
+                </p>
+              </>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

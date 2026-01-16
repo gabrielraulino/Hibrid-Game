@@ -132,6 +132,7 @@ function App() {
               <CardResponse 
                 response={response}
                 isLoading={isLoading}
+                currentLocation={gameState.currentLocation}
               />
             </div>
           </div>
